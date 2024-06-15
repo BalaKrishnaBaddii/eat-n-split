@@ -60,7 +60,11 @@ export function FormSplitBill({ friends, onclick, splitID, setFriends }) {
       <input
         type="text"
         value={bill}
-        onChange={(e) => setBill(e.target.value)}
+        onChange={(e) => {
+          setBill(e.target.value);
+          setMyexpense("");
+          setMyFriendExpense("");
+        }}
       />
 
       <label>💰Your Expense</label>
