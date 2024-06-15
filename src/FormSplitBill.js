@@ -1,19 +1,16 @@
 import { useState } from "react";
 import { Button } from "./Button";
 
-export function FormSplitBill({ friends, onclick, splitID, setFriends }) {
-  const friend = friends.find((friend) => friend.id === splitID);
-  const friendName = friend.name;
+export function FormSplitBill({
+  friends,
+  setFriends,
+  selectedFriend,
+  onSelection,
+}) {
   const [myExpense, setMyexpense] = useState("");
   const [bill, setBill] = useState("");
   const [friendExpense, setMyFriendExpense] = useState("");
   const [billPayed, setBillPayed] = useState(1);
-
-  console.log(bill);
-  console.log(myExpense);
-  console.log(billPayed);
-  console.log(bill - myExpense);
-  console.log(friends);
 
   function handleBill(e) {
     if (Number(e.target.value) > bill) {
@@ -30,7 +27,7 @@ export function FormSplitBill({ friends, onclick, splitID, setFriends }) {
     if (billPayed === 1) {
       setFriends(
         friends.map((fr) =>
-          fr.id === splitID
+          fr.id === selectedFriend.id
             ? {
                 ...fr,
                 balance: bill - myExpense,
@@ -41,7 +38,7 @@ export function FormSplitBill({ friends, onclick, splitID, setFriends }) {
     } else {
       setFriends(
         friends.map((fr) =>
-          fr.id === splitID
+          fr.id === selectedFriend.id
             ? {
                 ...fr,
                 balance: friendExpense - bill,
@@ -50,12 +47,12 @@ export function FormSplitBill({ friends, onclick, splitID, setFriends }) {
         )
       );
     }
-    onclick(onclick);
+    onSelection();
   }
 
   return (
     <form className="form-split-bill" onSubmit={handleSubmit}>
-      <h2>Split a Bill with {friend.name}</h2>
+      <h2>Split a Bill with {selectedFriend.name}</h2>
       <label>💵Bill Value</label>
       <input
         type="text"
@@ -70,7 +67,7 @@ export function FormSplitBill({ friends, onclick, splitID, setFriends }) {
       <label>💰Your Expense</label>
       <input type="text" value={myExpense} onChange={(e) => handleBill(e)} />
 
-      <label>👦{friendName}'s expense:</label>
+      <label>👦{selectedFriend.name}'s expense:</label>
       <input type="text" disabled value={friendExpense} />
 
       <label>🤑Who is paying bill:</label>
@@ -79,10 +76,9 @@ export function FormSplitBill({ friends, onclick, splitID, setFriends }) {
         onChange={(e) => setBillPayed(Number(e.target.value))}
       >
         <option value="1">You</option>
-        <option value="2">{friendName}</option>
+        <option value="2">{selectedFriend.name}</option>
       </select>
       <Button type="submit">Split Bill</Button>
-      <Button onClick={onclick}>Close</Button>
     </form>
   );
 }
