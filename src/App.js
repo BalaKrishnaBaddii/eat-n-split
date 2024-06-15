@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./index.css";
 import { FriendsList } from "./FriendsList";
 import { Button } from "./Button";
-import { FormAddFriend } from "./FormAddFriend.1";
+import { FormAddFriend } from "./FormAddFriend";
 import { FormSplitBill } from "./FormSplitBill";
 
 const initialFriends = [
@@ -31,9 +31,12 @@ export default function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSplitOpen, setIsSplitOpen] = useState(false);
   const [id, setId] = useState("");
-  console.log(id);
 
-  console.log(friends);
+  function handleAddFriend(friend) {
+    console.log(friend);
+    setFriends((friends) => [...friends, friend]);
+    setIsOpen(false);
+  }
 
   return (
     <div className="app">
@@ -43,19 +46,10 @@ export default function App() {
           onclick={() => setIsSplitOpen(true)}
           setid={setId}
         />
-        {!isOpen ? (
-          <Button onClick={() => setIsOpen(true)}>Add Friend</Button>
-        ) : null}
-        {isOpen ? (
-          <>
-            <FormAddFriend
-              friends={friends}
-              setFriends={setFriends}
-              setIsOpen={setIsOpen}
-            />
-            <Button onClick={() => setIsOpen(false)}>Close</Button>
-          </>
-        ) : null}
+        {isOpen && <FormAddFriend onAddFriend={handleAddFriend} />}
+        <Button onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? "Close" : "Add Friend"}
+        </Button>
       </div>
       {isSplitOpen ? (
         <FormSplitBill
