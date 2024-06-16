@@ -33,6 +33,7 @@ export default function App() {
 
   function handleShowAddFriend() {
     setShowAddFriend((show) => !show);
+    setSelectedFriend(null);
   }
 
   function handleAddFriend(friend) {
@@ -46,6 +47,7 @@ export default function App() {
     setSelectedFriend((selected) =>
       selected?.id === friend.id ? null : friend
     );
+    setShowAddFriend(false);
   }
 
   return (
