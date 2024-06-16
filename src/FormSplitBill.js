@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "./Button";
 
 export function FormSplitBill({ selectedFriend, onHandleSplitBill }) {
@@ -6,14 +6,6 @@ export function FormSplitBill({ selectedFriend, onHandleSplitBill }) {
   const [bill, setBill] = useState("");
   const [friendExpense, setMyFriendExpense] = useState("");
   const [billPayed, setBillPayed] = useState(1);
-
-  useEffect(() => {
-    // Reset the bill value when selectedFriend changes
-    setBill("");
-    setMyexpense("");
-    setMyFriendExpense("");
-    setBillPayed(1);
-  }, [selectedFriend]);
 
   function handleBill(value) {
     value >= 0 && value <= bill
