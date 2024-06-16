@@ -12,16 +12,11 @@ export function FormSplitBill({
   const [friendExpense, setMyFriendExpense] = useState("");
   const [billPayed, setBillPayed] = useState(1);
 
-  function handleBill(e) {
-    if (Number(e.target.value) > bill) {
-      setMyexpense(bill);
-      setMyFriendExpense(0);
-    } else {
-      setMyexpense(e.target.value);
-      setMyFriendExpense(bill - e.target.value);
-    }
+  function handleBill(value) {
+    value >= 0 && value <= bill
+      ? setMyexpense(Number(value)) || setMyFriendExpense(bill - Number(value))
+      : setMyexpense(bill) || setMyFriendExpense(0);
   }
-
   function handleSubmit(e) {
     e.preventDefault();
     if (billPayed === 1) {
@@ -30,7 +25,7 @@ export function FormSplitBill({
           fr.id === selectedFriend.id
             ? {
                 ...fr,
-                balance: bill - myExpense,
+                balance: selectedFriend.balance + (bill - myExpense),
               }
             : fr
         )
@@ -41,7 +36,7 @@ export function FormSplitBill({
           fr.id === selectedFriend.id
             ? {
                 ...fr,
-                balance: friendExpense - bill,
+                balance: selectedFriend.balance + (friendExpense - bill),
               }
             : fr
         )
@@ -58,14 +53,20 @@ export function FormSplitBill({
         type="text"
         value={bill}
         onChange={(e) => {
-          setBill(e.target.value);
+          setBill(isNaN(e.target.value) ? "" : Number(e.target.value));
           setMyexpense("");
           setMyFriendExpense("");
         }}
       />
 
       <label>💰Your Expense</label>
-      <input type="text" value={myExpense} onChange={(e) => handleBill(e)} />
+      <input
+        type="text"
+        value={myExpense}
+        onChange={(e) =>
+          handleBill(isNaN(e.target.value) ? setMyexpense("") : e.target.value)
+        }
+      />
 
       <label>👦{selectedFriend.name}'s expense:</label>
       <input type="text" disabled value={friendExpense} />
