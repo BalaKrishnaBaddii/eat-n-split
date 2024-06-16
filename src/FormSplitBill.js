@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./Button";
 
-export function FormSplitBill({
-  friends,
-  setFriends,
-  selectedFriend,
-  onSelection,
-}) {
+export function FormSplitBill({ selectedFriend, onHandleSplitBill }) {
   const [myExpense, setMyexpense] = useState("");
   const [bill, setBill] = useState("");
   const [friendExpense, setMyFriendExpense] = useState("");
   const [billPayed, setBillPayed] = useState(1);
+
+  useEffect(() => {
+    // Reset the bill value when selectedFriend changes
+    setBill("");
+    setMyexpense("");
+    setMyFriendExpense("");
+    setBillPayed(1);
+  }, [selectedFriend]);
 
   function handleBill(value) {
     value >= 0 && value <= bill
@@ -19,30 +22,9 @@ export function FormSplitBill({
   }
   function handleSubmit(e) {
     e.preventDefault();
-    if (billPayed === 1) {
-      setFriends(
-        friends.map((fr) =>
-          fr.id === selectedFriend.id
-            ? {
-                ...fr,
-                balance: selectedFriend.balance + (bill - myExpense),
-              }
-            : fr
-        )
-      );
-    } else {
-      setFriends(
-        friends.map((fr) =>
-          fr.id === selectedFriend.id
-            ? {
-                ...fr,
-                balance: selectedFriend.balance + (friendExpense - bill),
-              }
-            : fr
-        )
-      );
-    }
-    onSelection();
+    billPayed === 1
+      ? onHandleSplitBill(bill - myExpense)
+      : onHandleSplitBill(friendExpense - bill);
   }
 
   return (
